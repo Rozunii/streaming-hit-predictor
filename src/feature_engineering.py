@@ -27,7 +27,7 @@ def agregar_features(df):
 
     # Dias transcurridos desde que se agrego a la plataforma
     # Se usa clip(0) para que fechas futuras no den valores negativos
-    hoy = pd.Timestamp('2026-05-13')
+    hoy = pd.Timestamp.today().normalize()
     df['dias_en_plataforma'] = (hoy - df['date_added']).dt.days.fillna(0).clip(lower=0).astype(int)
 
     # Los votos de IMDb tienen valores muy grandes, usar log los comprime
@@ -70,3 +70,4 @@ def crear_targets(df):
     )
 
     return df, mediana_horas
+
