@@ -1,0 +1,39 @@
+{
+  "FEATURES_CLF": [
+    "release_year",
+    "antiguedad",
+    "duracion_total",
+    "votos_log",
+    "presupuesto_log",
+    "awards_won",
+    "cantidad_generos",
+    "tamanio_elenco",
+    "es_pelicula",
+    "es_reciente",
+    "tiene_presupuesto",
+    "mes_agregado",
+    "dias_en_plataforma",
+    "platform_cod",
+    "primary_genre_cod",
+    "rating_cod",
+    "rotten_tomatoes_score"
+  ],
+  "FEATURES_NN": [
+    "release_year",
+    "antiguedad",
+    "duracion_total",
+    "votos_log",
+    "presupuesto_log",
+    "awards_won",
+    "cantidad_generos",
+    "tamanio_elenco",
+    "es_pelicula",
+    "es_reciente",
+    "tiene_presupuesto",
+    "mes_agregado",
+    "dias_en_plataforma",
+    "platform_cod",
+    "primary_genre_cod",
+    "rating_cod"
+  ]
+}
