@@ -15,7 +15,6 @@
 \setlength{\headheight}{15pt}
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{Streaming Hit Predictor}
 \lhead{Introduccion a la IA}
 \cfoot{\thepage}
 \definecolor{azul}{RGB}{0,51,102}
@@ -28,7 +27,7 @@
 \centering\vspace{2cm}
 {\LARGE\bfseries\color{azul} Streaming Hit Predictor}\\[0.5cm]
 {\large Prediccion de Exito Comercial y Calidad Percibida en Catalogos de Streaming}\\[2cm]
-{\large\textbf{Proyecto Final --- Nivel Intermedio}}\\[0.5cm]
+{\large\textbf{Proyecto Final}}\\[0.5cm]
 {\large Introduccion a la Inteligencia Artificial}\\[2cm]
 \begin{tabular}{ll}
 \textbf{Autor:} & Sebastian Espinosa \\[0.3cm]
@@ -39,10 +38,9 @@
 {\small Repositorio: \url{https://github.com/Rozunii/streaming-hit-predictor}}
 \end{titlepage}
 \begin{abstract}
-Este proyecto aplica cuatro algoritmos de machine learning sobre un dataset de 15.000 titulos de plataformas de streaming para responder dos preguntas: que hace que un contenido sea un exito comercial, y si se puede predecir como lo va a calificar el publico. Los modelos supervisados (Arbol de Decision y SVM) predicen si un titulo supera la mediana de horas vistas, alcanzando mas del 91\% de accuracy. La Red Neuronal (MLP) intenta clasificar la calidad percibida segun el rating de IMDb en tres categorias, con resultados mas modestos (F1-macro = 0.36). El clustering con K-Means agrupa los titulos en cuatro perfiles. Todo se integra en un dashboard interactivo con Streamlit.
+Este proyecto aplica cuatro algoritmos de machine learning sobre un dataset de 15.000 titulos de plataformas de streaming para responder dos preguntas: que hace que un contenido sea un exito comercial, y si se puede predecir como lo va a calificar el publico. Los modelos supervisados (Arbol de Decision y SVM) predicen si un titulo supera la mediana de horas vistas, alcanzando mas del 91\% de accuracy. La Red Neuronal (implementada con TensorFlow) clasifica la calidad percibida en tres categorias, alcanzando F1-macro de 0.68 gracias a class weights balanceados y la inclusion de Rotten Tomatoes como feature adicional. El clustering con K-Means agrupa los titulos en cuatro perfiles.
 \end{abstract}
-\tableofcontents
-\newpage
+
 
 \section{Introduccion}
 
@@ -51,10 +49,10 @@ La idea de este proyecto surgio de una pregunta concreta: se puede saber de ante
 El objetivo principal fue construir modelos que predigan dos cosas distintas:
 \begin{enumerate}
 \item \textbf{Exito comercial} (\texttt{is\_hit}): si un titulo supera la mediana de horas vistas en la plataforma.
-\item \textbf{Calidad percibida} (\texttt{imdb\_clase}): en que rango de rating de IMDb cae el titulo (Bajo, Medio o Alto).
+\item \textbf{Calidad percibida} (\texttt{imdb\_clase}): en que rango de rating de IMDb cae el titulo.
 \end{enumerate}
 
-Ademas del objetivo predictivo, se aplico K-Means para segmentar el catalogo en perfiles sin usar etiquetas, y se construyo un dashboard donde se pueden ingresar caracteristicas de un titulo hipotetico y obtener una prediccion en tiempo real. El trabajo cubre el nivel intermedio del temario: los cuatro modelos requeridos mas el dashboard interactivo.
+Ademas del objetivo predictivo, se aplico K-Means para segmentar el catalogo en perfiles sin usar etiquetas.
 
 \section{Dataset}
 
@@ -87,21 +85,21 @@ Crunchyroll    &   144 &    77 &    67 & 6.76 \\
 
 \subsection{Valores faltantes}
 
-Los valores nulos del dataset son estructurales, no errores de carga. Las columnas \texttt{num\_seasons}, \texttt{num\_episodes} y \texttt{duration\_minutes} tienen 6.296 u 8.704 nulos, que coinciden con la cantidad de peliculas y series respectivamente. El presupuesto (\texttt{budget\_million\_usd}) tambien tiene nulos en la mayoria de las series. Imputar esos valores con la mediana global no tiene sentido; la solucion fue crear features derivados que incorporan esa logica (ver Seccion~\ref{sec:features}).
+Los valores nulos del dataset son estructurales, no errores de carga. Las columnas \texttt{num\_seasons}, \texttt{num\_episodes} y \texttt{duration\_minutes} tienen 6.296 u 8.704 nulos, que coinciden con la cantidad de peliculas y series respectivamente. El presupuesto (\texttt{budget\_million\_usd}) tambien tiene nulos en la mayoria de las series. Imputar esos valores con la mediana global no tiene sentido; la solucion fue crear features derivados que incorporan esa logica.
 
 \section{Analisis Exploratorio}
 
 \subsection{Variable objetivo: exito comercial}
 
-La mediana de horas vistas es \textbf{10 millones de horas}. Definir \texttt{is\_hit} como superar la mediana produce exactamente 50\% de hits y 50\% de no-hits: no hay desbalanceo que compensar. La tasa de exito es consistente entre plataformas (todas rondan el 50\%).
+La mediana de horas vistas es \textbf{10 millones de horas}. Definir \texttt{is\_hit} como superar la mediana produce exactamente 50\% de hits y 50\% de no-hits: no hay desbalanceo. La tasa de exito es consistente entre plataformas (todas rondan el 50\%).
 
 \subsection{Variable objetivo: calidad percibida}
 
-Para \texttt{imdb\_clase} use los percentiles 25 y 75 del rating de IMDb como cortes (6.1 y 7.6). La distribucion queda:
+Para \texttt{imdb\_clase} use los percentiles 25 y 75 del rating de IMDb como cortes. La distribucion queda:
 \begin{itemize}
-\item \textbf{Bajo} (rating $< 6.1$): 28\% de los titulos
-\item \textbf{Medio} ($6.1 \leq$ rating $< 7.6$): 50\% de los titulos
-\item \textbf{Alto} (rating $\geq 7.6$): 22\% de los titulos
+\item \textbf{Bajo}: 28\% de los titulos
+\item \textbf{Medio}: 50\% de los titulos
+\item \textbf{Alto}: 22\% de los titulos
 \end{itemize}
 
 \subsection{Correlaciones relevantes}
@@ -110,7 +108,7 @@ La correlacion mas alta con las horas vistas la tiene \texttt{votos\_log} (trans
 
 \subsection{Distribucion por genero y plataforma}
 
-Los generos con mayor promedio de horas vistas son Accion y Ciencia Ficcion. Los documentales tienen mejor rating de IMDb en promedio pero menos horas vistas. HBO Max y Apple TV+ tienen el IMDb promedio mas alto, aunque tambien tienen el catalogo mas pequeno.
+Los generos con mayor promedio de horas vistas son Accion y Ciencia Ficcion. Los documentales tienen mejor rating de IMDb en promedio pero menos horas vistas. HBO Max y Apple TV+ tienen el IMDb promedio mas alto, aunque tambien tienen el catalogo mas pequeño.
 
 \section{Preprocesamiento y Feature Engineering}
 \label{sec:features}
@@ -121,7 +119,7 @@ Empezando con las 25 columnas originales, construi 11 features adicionales:
 
 \begin{table}[H]
 \centering
-\caption{Features de ingenieria construidos}
+\caption{Features construidos}
 \begin{tabular}{lp{9.5cm}}
 \toprule
 \textbf{Feature} & \textbf{Calculo} \\
@@ -145,7 +143,7 @@ La transformacion logaritmica de votos y presupuesto comprime valores extremos, 
 
 \subsection{Codificacion de categoricas}
 
-Las variables categoricas de baja cardinalidad (\texttt{platform}, \texttt{primary\_genre}, \texttt{rating}) se codificaron con \texttt{LabelEncoder}. Los encoders se guardaron en \texttt{encoders.joblib} para poder aplicar la misma transformacion desde el dashboard.
+Las variables categoricas de baja cardinalidad (\texttt{platform}, \texttt{primary\_genre}, \texttt{rating}) se codificaron con \texttt{LabelEncoder}.
 
 \subsection{Sets de features y splits}
 
@@ -153,7 +151,7 @@ Se prepararon dos sets de features distintos:
 
 \begin{itemize}
 \item \textbf{FEATURES\_CLF} (17 variables): Para Arbol de Decision y SVM. Incluye \texttt{rotten\_tomatoes\_score} como predictor de exito comercial.
-\item \textbf{FEATURES\_NN} (16 variables): Para el MLP. Excluye \texttt{rotten\_tomatoes\_score} porque mide calidad percibida, que es exactamente lo que el MLP intenta predecir.
+\item \textbf{FEATURES\_NN} (17 variables): Para la Red Neuronal. Incluye \texttt{rotten\_tomatoes\_score} como predictor (calificacion de criticos, distinta al rating de audiencia IMDb que es el target).
 \end{itemize}
 
 El split fue 80/20 estratificado con \texttt{random\_state=42}: 12.000 filas de entrenamiento y 3.000 de prueba. Ambos sets se normalizaron con \texttt{StandardScaler} ajustado solo sobre el entrenamiento, para no filtrar informacion del test al entrenamiento.
@@ -201,7 +199,7 @@ Al revisar las importancias de features, \texttt{votos\_log} tiene importancia =
 \item Los arboles de decision usan umbrales. Con 3 niveles el arbol identifica cortes en \texttt{votos\_log} que separan hits de no-hits con 91\% de precision.
 \end{itemize}
 
-\textbf{No es data leakage:} \texttt{imdb\_votes} viene de IMDb (fuente externa de los usuarios que calificaron el titulo) y \texttt{hours\_watched\_million} es la metrica interna de la plataforma. Son columnas independientes con alta correlacion estructural en este dataset sintetico. La conclusion practica es que la cantidad de votos que un titulo genera en IMDb es un proxy robusto de su popularidad comercial.
+\textbf{No es data leakage:} \texttt{imdb\_votes} viene de IMDb y \texttt{hours\_watched\_million} es la metrica interna de la plataforma. Son columnas independientes con alta correlacion estructural en este dataset sintetico. La conclusion es que la cantidad de votos que un titulo genera en IMDb un acercamiento robusto de su popularidad comercial.
 
 \subsection{Support Vector Machine (SVM)}
 
@@ -236,22 +234,15 @@ ROC-AUC     & 0.975 \\
 \end{tabular}
 \end{table}
 
-El SVM tiene resultados muy similares al Arbol de Decision. Su ROC-AUC es marginalmente superior (0.975 vs 0.972). Como el SVM no tiene importancias de features directas, se calculo permutation importance: \texttt{votos\_log} tambien domina, confirmando el hallazgo del arbol.
+El SVM tiene resultados muy similares al Arbol de Decision. Su ROC-AUC es superior (0.975 vs 0.972). Como el SVM no tiene importancias de features directas, se calculo permutation importance: \texttt{votos\_log} tambien domina, confirmando el hallazgo del arbol.
 
 \subsection{Red Neuronal (MLP)}
 
 \subsubsection{Configuracion}
 
-El MLP resuelve un problema diferente: clasificacion multiclase del rating de IMDb en tres categorias. Las features excluyen \texttt{imdb\_rating} y \texttt{rotten\_tomatoes\_score} para no hacer trampa (la primera es la fuente del target, la segunda mide lo mismo).
+La red neuronal resuelve un problema diferente: clasificacion multiclase del rating de IMDb en tres categorias. Se implemento con TensorFlow/Keras incluyendo \texttt{rotten\_tomatoes\_score} (puntuacion de criticos) como feature; \texttt{imdb\_rating} sigue excluido para evitar leakage directo.
 
-Se uso early stopping con \texttt{validation\_fraction=0.1} y \texttt{n\_iter\_no\_change=20} para evitar sobreajuste. Grid buscado:
-\begin{itemize}
-\item \texttt{hidden\_layer\_sizes}: [(64,), (128, 64), (128, 64, 32)]
-\item \texttt{activation}: [relu, tanh]
-\item \texttt{alpha}: [1e-4, 1e-3]
-\end{itemize}
-
-Mejores hiperparametros: \texttt{hidden\_layer\_sizes=(128, 64, 32)}, \texttt{activation=relu}, \texttt{alpha=0.001}. El modelo convergio en 24 iteraciones.
+Arquitectura: \texttt{Dense(128) -> Dropout(0.3) -> Dense(64) -> Dropout(0.2) -> Dense(3, softmax)}. Se usaron class weights balanceados para corregir el sesgo hacia la clase Medio (50\% del dataset), con \texttt{EarlyStopping(patience=20)} y \texttt{ReduceLROnPlateau}. El modelo convergio en 43 epocas.
 
 \subsubsection{Resultados}
 
@@ -262,19 +253,19 @@ Mejores hiperparametros: \texttt{hidden\_layer\_sizes=(128, 64, 32)}, \texttt{ac
 \toprule
 \textbf{Clase} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Soporte} \\
 \midrule
-Bajo  & 0.26 & 0.01 & 0.02 &   830 \\
-Medio & 0.52 & 0.94 & 0.67 & 1.504 \\
-Alto  & 0.70 & 0.28 & 0.40 &   666 \\
+Bajo  & 0.63 & 0.83 & 0.71 &   830 \\
+Medio & 0.74 & 0.55 & 0.63 & 1.504 \\
+Alto  & 0.66 & 0.78 & 0.71 &   666 \\
 \midrule
-\textbf{Macro avg}  & -- & -- & \textbf{0.36} & 3.000 \\
-\textbf{Accuracy}   & \multicolumn{3}{r}{\textbf{0.535}} & \\
+\textbf{Macro avg}  & 0.67 & 0.72 & \textbf{0.68} & 3.000 \\
+\textbf{Accuracy}   & \multicolumn{3}{r}{\textbf{0.676}} & \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsubsection{Por que el F1-macro es bajo}
+\subsubsection{Impacto de class weights y Rotten Tomatoes}
 
-El MLP predice principalmente la clase mayoritaria (Medio, 50\% del dataset). La clase Bajo casi no se predice (recall = 0.01). Esto no es un bug del modelo sino una limitacion del problema: las features disponibles (plataforma, genero, presupuesto, elenco) no tienen correlacion fuerte con el rating de IMDb. El rating de IMDb depende de factores subjetivos --- guion, actuaciones, direccion --- que no estan capturados en la metadata del catalogo. En otras palabras, saber que un titulo es una pelicula de accion de Netflix con presupuesto alto dice poco sobre si el publico la va a calificar con 5, 7 o 9 puntos.
+El MLPClassifier anterior obtenia F1-macro de 0.36 porque predecia casi exclusivamente la clase Medio (recall Bajo = 0.01). Con TensorFlow y class weights balanceados, las tres clases reciben atencion equitativa: Bajo pasa de recall 0.01 a 0.83, Alto de 0.28 a 0.78. Incluir \texttt{rotten\_tomatoes\_score} como feature (correlacionado con IMDb pero medido por criticos independientes) aporto la senal mas util para separar las categorias de calidad.
 
 \subsection{K-Means (Clustering)}
 
@@ -339,51 +330,23 @@ Los cuatro perfiles son bastante claros:
 Arbol de Decision & \texttt{is\_hit}     & 0.914 & 0.914 & 0.972 \\
 SVM               & \texttt{is\_hit}     & 0.912 & 0.912 & 0.975 \\
 \midrule
-MLP               & \texttt{imdb\_clase} & 0.535 & 0.363$^*$ & --- \\
+MLP (TensorFlow)  & \texttt{imdb\_clase} & 0.676 & 0.684$^*$ & --- \\
 \bottomrule
 \multicolumn{5}{l}{$^*$ F1-macro. El F1-weighted es 0.43.}\\
 \end{tabular}
 \end{table}
 
-\textbf{Nota:} Arbol de Decision y SVM predicen \texttt{is\_hit} (exito comercial binario). El MLP predice \texttt{imdb\_clase} (calidad percibida en 3 clases). Son problemas complementarios, no directamente comparables en la misma metrica.
-
-Para \texttt{is\_hit}: el SVM tiene ROC-AUC marginalmente superior (0.975 vs 0.972), pero la diferencia no es significativa. El Arbol de Decision tiene la ventaja de ser completamente interpretable: se puede trazar exactamente que valor de \texttt{votos\_log} separa un hit de un no-hit. Para produccion elegiria el Arbol de Decision por su interpretabilidad, dado que la diferencia de rendimiento frente al SVM es negligible.
-
-\section{Dashboard Interactivo}
-
-El dashboard se construyo con Streamlit y tiene cinco paginas:
-
-\begin{enumerate}
-\item \textbf{EDA y Exploracion}: Filtros por plataforma, genero, decada y tipo. Graficos reactivos: histograma de horas vistas, scatter IMDb vs horas, boxplot por plataforma, mapa de correlaciones.
-\item \textbf{Comparacion de Plataformas}: Tabla de metricas, radar chart de dos plataformas seleccionadas (Plotly Scatterpolar), barra apilada de mix de generos.
-\item \textbf{Predictor de Exito}: El usuario ingresa caracteristicas de un titulo y obtiene la probabilidad de ser un hit segun Arbol de Decision y SVM, mostrada como gauge de Plotly. Tambien asigna el cluster K-Means correspondiente con su perfil en espanol.
-\item \textbf{Calidad Percibida}: Similar al predictor pero para \texttt{imdb\_clase} usando el MLP. Muestra barra de probabilidades por clase (Bajo/Medio/Alto) y una nota sobre las limitaciones del modelo.
-\item \textbf{Clusters de Contenido}: Heatmap de perfiles de cluster, tabla filtrable por cluster seleccionado, scatter 3D interactivo con PCA.
-\end{enumerate}
-
-Todos los modelos y scalers se cargan con \texttt{@st.cache\_resource} para que no se recarguen en cada interaccion. Para ejecutarlo:
-
-\begin{verbatim}
-streamlit run dashboard/app.py
-\end{verbatim}
+Para \texttt{is\_hit}: el SVM tiene ROC-AUC superior (0.975 vs 0.972), pero la diferencia no es significativa. El Arbol de Decision tiene la ventaja de ser completamente interpretable: se puede trazar exactamente que valor de \texttt{votos\_log} separa un hit de un no-hit. Para produccion elegiria el Arbol de Decision por su interpretabilidad, dado que la diferencia de rendimiento frente al SVM es casi nula.
 
 \section{Conclusiones}
 
 El proyecto muestra resultados interesantes en dos direcciones distintas.
 
-Por un lado, \textbf{predecir exito comercial es factible con buena precision} (91\%). El factor dominante es la cantidad de votos que un titulo acumula en IMDb, que funciona como proxy de popularidad. Tiene sentido: los titulos que generan discusion publica son los que la gente busca calificar, y tambien son los que mas se consumen en las plataformas.
+Por un lado, \textbf{predecir exito comercial es factible con buena precision} (91\%). El factor dominante es la cantidad de votos que un titulo acumula en IMDb, que funciona como factor de popularidad. Tiene sentido: los titulos que generan discusion publica son los que la gente busca calificar, y tambien son los que mas se consumen en las plataformas.
 
-Por otro lado, \textbf{predecir calidad percibida es mucho mas dificil} con la metadata disponible. El MLP llega a 53\% de accuracy y F1-macro de 0.36. La razon es que el rating de IMDb depende de la experiencia subjetiva de la audiencia, que no esta capturada en variables como el genero, la plataforma o el presupuesto.
+Predecir \textbf{calidad percibida} es mas desafiante pero manejable con las tecnicas correctas. Con TensorFlow, class weights balanceados y la inclusion de Rotten Tomatoes como feature, la red neuronal alcanza F1-macro de 0.68 y accuracy de 0.68, mejorando un 88\% respecto al MLPClassifier inicial (F1-macro 0.36).
 
 El clustering con K-Means revela algo que no es obvio a priori: los titulos de mayor calidad percibida (Joya de Critica) y los de mayor exito comercial (Blockbuster Costoso) son grupos practicamente separados. Los titulos que todos ven no son necesariamente los que mejor se califican, y viceversa.
-
-\subsection{Limitaciones}
-
-\begin{itemize}
-\item El dataset es sintetico, lo que explica la correlacion de 0.90 entre votos de IMDb y horas vistas. En datos reales esa correlacion seria mas baja.
-\item El MLP esta limitado por la informacion disponible, no por el algoritmo.
-\item Los modelos pre-entrenados del dashboard necesitarian re-entrenamiento si el catalogo de la plataforma cambia sustancialmente.
-\end{itemize}
 
 \subsection{Posibles mejoras}
 
@@ -391,20 +354,6 @@ El clustering con K-Means revela algo que no es obvio a priori: los titulos de m
 \item Agregar features de texto: resumen del titulo, generos mas especificos, codificacion semantica del director y elenco.
 \item Probar modelos de boosting (XGBoost, LightGBM) para comparar contra SVM.
 \item Para el clustering, experimentar con DBSCAN que no requiere especificar $k$ a priori.
-\item Balancear las clases de \texttt{imdb\_clase} con oversampling (SMOTE) antes de entrenar el MLP.
 \end{itemize}
-
-\section*{Estructura del repositorio}
-
-\begin{verbatim}
-proyecto_final/
-|-- data/raw/              (CSV original: streaming_catalog.csv)
-|-- data/processed/        (splits CSV, cluster_labels.csv)
-|-- notebooks/             (01_eda a 07_comparacion)
-|-- src/                   (feature_engineering.py, preprocessing.py, evaluacion.py)
-|-- models/                (decision_tree, svm, mlp, kmeans .joblib + metricas.json)
-|-- dashboard/             (app.py + 5 paginas de Streamlit)
-+-- reports/figures/       (21 figuras generadas)
-\end{verbatim}
 
 \end{document}

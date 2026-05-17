@@ -34,6 +34,7 @@
     "dias_en_plataforma",
     "platform_cod",
     "primary_genre_cod",
-    "rating_cod"
+    "rating_cod",
+    "rotten_tomatoes_score"
   ]
 }

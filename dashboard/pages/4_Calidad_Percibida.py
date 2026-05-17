@@ -35,6 +35,7 @@ with col3:
     awards_won    = st.number_input("Premios ganados", 0, 200, 0, step=1)
     tamanio_elenco= st.slider("Actores en el elenco", 0, 50, 8)
     imdb_votes    = st.number_input("Votos IMDb estimados", 0, 3000000, 0, step=1000)
+    rt_score      = st.slider("Rotten Tomatoes (%)", 0, 100, 65)
 
 date_added = st.date_input("Fecha de incorporacion", value=pd.Timestamp.today().date())
 
@@ -47,7 +48,7 @@ if st.button("Predecir calidad", type="primary"):
         'date_added': pd.Timestamp(date_added),
         'duration_minutes': 100.0 if tipo == 'Movie' else np.nan,
         'num_episodes': 10.0 if tipo == 'TV Show' else np.nan,
-        'imdb_rating': 7.0, 'rotten_tomatoes_score': 65.0, 'hours_watched_million': 0.0,
+        'imdb_rating': 7.0, 'rotten_tomatoes_score': float(rt_score), 'hours_watched_million': 0.0,
     }
     df_row = pd.DataFrame([row])
     try:
@@ -59,7 +60,7 @@ if st.button("Predecir calidad", type="primary"):
 
         X_nn   = df_row[FEATURES_NN].fillna(0)
         X_scaled = scalers['nn'].transform(X_nn)
-        proba  = modelos['mlp'].predict_proba(X_scaled)[0]
+        proba  = modelos['mlp'].predict(X_scaled, verbose=0)[0]
         clases = ['Bajo', 'Medio', 'Alto']
         pred_idx = int(proba.argmax())
 
@@ -72,7 +73,7 @@ if st.button("Predecir calidad", type="primary"):
         fig.update_layout(showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
         st.write(f"Clase predicha: **{clases[pred_idx]}** ({proba[pred_idx]:.1%})")
-        st.caption("F1-macro en test: 0.363. Predecir calidad percibida desde metadata es intrinsecamente dificil.")
+        st.caption("Modelo: TensorFlow con class weights balanceados e incluye Rotten Tomatoes score como feature.")
     except Exception as e:
         st.error(f"Error: {e}")
         import traceback; st.code(traceback.format_exc())

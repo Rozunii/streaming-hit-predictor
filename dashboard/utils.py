@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import sys
 import os
+import tensorflow as tf
 
 _BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _BASE not in sys.path:
@@ -18,7 +19,7 @@ def load_models():
     return {
         'dt':     joblib.load(os.path.join(base, 'decision_tree.joblib')),
         'svm':    joblib.load(os.path.join(base, 'svm.joblib')),
-        'mlp':    joblib.load(os.path.join(base, 'mlp.joblib')),
+        'mlp':    tf.keras.models.load_model(os.path.join(base, 'mlp.keras')),
         'kmeans': joblib.load(os.path.join(base, 'kmeans.joblib')),
     }
 
