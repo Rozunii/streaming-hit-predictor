@@ -12,6 +12,7 @@
 \usepackage{titlesec}
 \usepackage{parskip}
 \geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm}
+\setlength{\headheight}{15pt}
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{Streaming Hit Predictor}
@@ -22,6 +23,7 @@
 \titleformat{\section}{\color{azul}\large\bfseries}{\thesection}{1em}{}[\color{azul}\titlerule]
 \titleformat{\subsection}{\color{azul}\normalsize\bfseries}{\thesubsection}{1em}{}
 \begin{document}
+\sloppy
 \begin{titlepage}
 \centering\vspace{2cm}
 {\LARGE\bfseries\color{azul} Streaming Hit Predictor}\\[0.5cm]
@@ -65,20 +67,20 @@ El dataset contiene informacion de 15.000 titulos distribuidos entre 10 platafor
 \caption{Titulos por plataforma}
 \begin{tabular}{lrrrr}
 \toprule
-\textbf{Plataforma} & \textbf{Titulos} & \textbf{Peliculas} & \textbf{Series} & \textbf{IMDb prom.} \
+\textbf{Plataforma} & \textbf{Titulos} & \textbf{Peliculas} & \textbf{Series} & \textbf{IMDb prom.} \\
 \midrule
-Netflix        & 4.502 & 2.660 & 1.842 & 6.75 \
-Amazon Prime   & 3.341 & 1.921 & 1.420 & 6.78 \
-Disney+        & 1.990 & 1.143 &   847 & 6.79 \
-Hulu           & 1.462 &   855 &   607 & 6.76 \
-HBO Max        & 1.228 &   700 &   528 & 7.04 \
-Paramount+     &   745 &   433 &   312 & 6.83 \
-Apple TV+      &   734 &   428 &   306 & 7.12 \
-Peacock        &   558 &   309 &   249 & 6.69 \
-JioCinema      &   296 &   178 &   118 & 6.77 \
-Crunchyroll    &   144 &    77 &    67 & 6.76 \
+Netflix        & 4.502 & 2.660 & 1.842 & 6.75 \\
+Amazon Prime   & 3.341 & 1.921 & 1.420 & 6.78 \\
+Disney+        & 1.990 & 1.143 &   847 & 6.79 \\
+Hulu           & 1.462 &   855 &   607 & 6.76 \\
+HBO Max        & 1.228 &   700 &   528 & 7.04 \\
+Paramount+     &   745 &   433 &   312 & 6.83 \\
+Apple TV+      &   734 &   428 &   306 & 7.12 \\
+Peacock        &   558 &   309 &   249 & 6.69 \\
+JioCinema      &   296 &   178 &   118 & 6.77 \\
+Crunchyroll    &   144 &    77 &    67 & 6.76 \\
 \midrule
-\textbf{Total} & \textbf{15.000} & \textbf{8.704} & \textbf{6.296} & \textbf{6.79} \
+\textbf{Total} & \textbf{15.000} & \textbf{8.704} & \textbf{6.296} & \textbf{6.79} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -122,19 +124,19 @@ Empezando con las 25 columnas originales, construi 11 features adicionales:
 \caption{Features de ingenieria construidos}
 \begin{tabular}{lp{9.5cm}}
 \toprule
-\textbf{Feature} & \textbf{Calculo} \
+\textbf{Feature} & \textbf{Calculo} \\
 \midrule
-\texttt{es\_pelicula}         & 1 si type == ``Movie'', 0 si serie \
-\texttt{cantidad\_generos}    & Cantidad de generos listados en la columna genres \
-\texttt{tamanio\_elenco}      & Cantidad de actores en el elenco \
-\texttt{antiguedad}           & $2026 - \text{release\_year}$ \
-\texttt{es\_reciente}         & 1 si release\_year $\geq 2020$ \
-\texttt{mes\_agregado}        & Mes en que fue agregado a la plataforma \
-\texttt{dias\_en\_plataforma} & Dias transcurridos desde que fue agregado \
-\texttt{votos\_log}           & $\ln(1 + \text{imdb\_votes})$ \
-\texttt{presupuesto\_log}     & $\ln(1 + \text{budget})$, 0 si nulo \
-\texttt{tiene\_presupuesto}   & 1 si el presupuesto esta reportado, 0 si no \
-\texttt{duracion\_total}      & Peliculas: duration\_minutes; Series: num\_episodes $\times$ 45 min \
+\texttt{es\_pelicula}         & 1 si type == ``Movie'', 0 si serie \\
+\texttt{cantidad\_generos}    & Cantidad de generos listados en la columna genres \\
+\texttt{tamanio\_elenco}      & Cantidad de actores en el elenco \\
+\texttt{antiguedad}           & $2026 - \text{release\_year}$ \\
+\texttt{es\_reciente}         & 1 si release\_year $\geq 2020$ \\
+\texttt{mes\_agregado}        & Mes en que fue agregado a la plataforma \\
+\texttt{dias\_en\_plataforma} & Dias transcurridos desde que fue agregado \\
+\texttt{votos\_log}           & $\ln(1 + \text{imdb\_votes})$ \\
+\texttt{presupuesto\_log}     & $\ln(1 + \text{budget})$, 0 si nulo \\
+\texttt{tiene\_presupuesto}   & 1 si el presupuesto esta reportado, 0 si no \\
+\texttt{duracion\_total}      & Peliculas: duration\_minutes; Series: num\_episodes $\times$ 45 min \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -178,13 +180,13 @@ Mejores hiperparametros: \texttt{max\_depth=None}, \texttt{min\_samples\_split=2
 \caption{Metricas del Arbol de Decision (test set)}
 \begin{tabular}{lr}
 \toprule
-\textbf{Metrica} & \textbf{Valor} \
+\textbf{Metrica} & \textbf{Valor} \\
 \midrule
-Accuracy    & 0.914 \
-Precision   & 0.915 \
-Recall      & 0.914 \
-F1-Score    & 0.914 \
-ROC-AUC     & 0.972 \
+Accuracy    & 0.914 \\
+Precision   & 0.915 \\
+Recall      & 0.914 \\
+F1-Score    & 0.914 \\
+ROC-AUC     & 0.972 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -223,13 +225,13 @@ Mejores hiperparametros: \texttt{kernel=rbf}, \texttt{C=1}, \texttt{gamma=0.01}.
 \caption{Metricas del SVM (test set)}
 \begin{tabular}{lr}
 \toprule
-\textbf{Metrica} & \textbf{Valor} \
+\textbf{Metrica} & \textbf{Valor} \\
 \midrule
-Accuracy    & 0.912 \
-Precision   & 0.912 \
-Recall      & 0.912 \
-F1-Score    & 0.912 \
-ROC-AUC     & 0.975 \
+Accuracy    & 0.912 \\
+Precision   & 0.912 \\
+Recall      & 0.912 \\
+F1-Score    & 0.912 \\
+ROC-AUC     & 0.975 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -258,14 +260,14 @@ Mejores hiperparametros: \texttt{hidden\_layer\_sizes=(128, 64, 32)}, \texttt{ac
 \caption{Metricas del MLP por clase (test set)}
 \begin{tabular}{lrrrr}
 \toprule
-\textbf{Clase} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Soporte} \
+\textbf{Clase} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Soporte} \\
 \midrule
-Bajo  & 0.26 & 0.01 & 0.02 &   830 \
-Medio & 0.52 & 0.94 & 0.67 & 1.504 \
-Alto  & 0.70 & 0.28 & 0.40 &   666 \
+Bajo  & 0.26 & 0.01 & 0.02 &   830 \\
+Medio & 0.52 & 0.94 & 0.67 & 1.504 \\
+Alto  & 0.70 & 0.28 & 0.40 &   666 \\
 \midrule
-\textbf{Macro avg}  & -- & -- & \textbf{0.36} & 3.000 \
-\textbf{Accuracy}   & \multicolumn{3}{r}{\textbf{0.535}} & \
+\textbf{Macro avg}  & -- & -- & \textbf{0.36} & 3.000 \\
+\textbf{Accuracy}   & \multicolumn{3}{r}{\textbf{0.535}} & \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -285,13 +287,13 @@ Se probaron valores de $k$ de 2 a 10 usando tres criterios simultaneamente:
 \caption{Criterios de seleccion de k (extracto)}
 \begin{tabular}{lrrr}
 \toprule
-\textbf{k} & \textbf{Inercia} & \textbf{Silhouette} & \textbf{Davies-Bouldin} \
+\textbf{k} & \textbf{Inercia} & \textbf{Silhouette} & \textbf{Davies-Bouldin} \\
 \midrule
-2  & 100.983 & 0.170 & 2.034 \
-3  &  88.678 & 0.174 & 1.736 \
-\textbf{4}  & \textbf{78.793} & \textbf{0.181} & \textbf{1.449} \
-5  &  71.255 & 0.174 & 1.381 \
-6  &  64.483 & 0.184 & 1.303 \
+2  & 100.983 & 0.170 & 2.034 \\
+3  &  88.678 & 0.174 & 1.736 \\
+\textbf{4}  & \textbf{78.793} & \textbf{0.181} & \textbf{1.449} \\
+5  &  71.255 & 0.174 & 1.381 \\
+6  &  64.483 & 0.184 & 1.303 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -305,14 +307,14 @@ Se eligio $k=4$ porque es el primer maximo local del silhouette score. A partir 
 \caption{Valores medios por cluster (features representativas)}
 \begin{tabular}{lrrrr}
 \toprule
-\textbf{Feature} & \textbf{Blockbuster} & \textbf{Nicho} & \textbf{Joya Critica} & \textbf{Promedio} \
+\textbf{Feature} & \textbf{Blockbuster} & \textbf{Nicho} & \textbf{Joya Critica} & \textbf{Promedio} \\
 \midrule
-Titulos             &    134 & 4.826 & 4.104 & 5.936 \
-IMDb                &   6.74 &  6.41 &  8.05 &  6.28 \
-RT Score            &  66.09 & 62.99 & 82.27 & 61.19 \
-Horas vistas (M)    & 2.455  &  48.3 &  52.0 &  50.3 \
-Presupuesto (log)   &   1.75 &  0.00 &  1.70 &  2.87 \
-Premios ganados     &   0.34 &  0.07 &  0.98 &  0.04 \
+Titulos             &    134 & 4.826 & 4.104 & 5.936 \\
+IMDb                &   6.74 &  6.41 &  8.05 &  6.28 \\
+RT Score            &  66.09 & 62.99 & 82.27 & 61.19 \\
+Horas vistas (M)    & 2.455  &  48.3 &  52.0 &  50.3 \\
+Presupuesto (log)   &   1.75 &  0.00 &  1.70 &  2.87 \\
+Premios ganados     &   0.34 &  0.07 &  0.98 &  0.04 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -332,14 +334,14 @@ Los cuatro perfiles son bastante claros:
 \caption{Comparacion de modelos supervisados}
 \begin{tabular}{llrrr}
 \toprule
-\textbf{Modelo} & \textbf{Target} & \textbf{Accuracy} & \textbf{F1} & \textbf{ROC-AUC} \
+\textbf{Modelo} & \textbf{Target} & \textbf{Accuracy} & \textbf{F1} & \textbf{ROC-AUC} \\
 \midrule
-Arbol de Decision & \texttt{is\_hit}     & 0.914 & 0.914 & 0.972 \
-SVM               & \texttt{is\_hit}     & 0.912 & 0.912 & 0.975 \
+Arbol de Decision & \texttt{is\_hit}     & 0.914 & 0.914 & 0.972 \\
+SVM               & \texttt{is\_hit}     & 0.912 & 0.912 & 0.975 \\
 \midrule
-MLP               & \texttt{imdb\_clase} & 0.535 & 0.363$^*$ & --- \
+MLP               & \texttt{imdb\_clase} & 0.535 & 0.363$^*$ & --- \\
 \bottomrule
-\multicolumn{5}{l}{$^*$ F1-macro. El F1-weighted es 0.43.}
+\multicolumn{5}{l}{$^*$ F1-macro. El F1-weighted es 0.43.}\\
 \end{tabular}
 \end{table}
 
