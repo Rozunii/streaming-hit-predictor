@@ -87,6 +87,14 @@ Crunchyroll    &   144 &    77 &    67 & 6.76 \\
 
 Los valores nulos del dataset son estructurales, no errores de carga. Las columnas \texttt{num\_seasons}, \texttt{num\_episodes} y \texttt{duration\_minutes} tienen 6.296 u 8.704 nulos, que coinciden con la cantidad de peliculas y series respectivamente. El presupuesto (\texttt{budget\_million\_usd}) tambien tiene nulos en la mayoria de las series. Imputar esos valores con la mediana global no tiene sentido; la solucion fue crear features derivados que incorporan esa logica.
 
+\section{Justificacion de la Fuente de Datos}
+
+El dataset fue seleccionado por tres razones concretas. Primero, el dominio es adecuado para los cuatro modelos del temario: la variable de horas vistas permite definir un target de clasificacion binaria balanceado, el rating de IMDb permite una clasificacion multiclase, y las caracteristicas heterogeneas del catalogo (presupuesto, premios, genero, plataforma) hacen que el clustering tenga sentido semantico.
+
+Segundo, el dataset combina fuentes de informacion complementarias: metricas de audiencia internas de la plataforma (\texttt{hours\_watched\_million}), calificacion de audiencia general (\texttt{imdb\_rating}, \texttt{imdb\_votes}), calificacion de critica especializada (\texttt{rotten\_tomatoes\_score}) e informacion de produccion (\texttt{budget\_million\_usd}, \texttt{awards\_won}). Esta variedad permite estudiar si el exito comercial y la calidad percibida responden a las mismas variables.
+
+Tercero, el tamano de 15.000 filas es suficiente para entrenar y evaluar los cuatro modelos con un split 80/20 y validacion cruzada de 5 folds sin riesgo de overfitting por tamano de muestra.
+
 \section{Analisis Exploratorio}
 
 \subsection{Variable objetivo: exito comercial}
@@ -140,6 +148,18 @@ Empezando con las 25 columnas originales, construi 11 features adicionales:
 \end{table}
 
 La transformacion logaritmica de votos y presupuesto comprime valores extremos, muy frecuentes en entretenimiento: una pelicula de Marvel puede tener cientos de millones de votos mientras que un documental niche puede tener cientos.
+
+\subsection{Tratamiento de valores faltantes}
+
+Los nulos se trataron en tres niveles segun su origen:
+
+\begin{enumerate}
+\item \textbf{Nulos estructurales por tipo de contenido}: \texttt{budget\_million\_usd} es nulo en la mayoria de las series (sin presupuesto reportado). En lugar de imputar con la mediana global --lo cual seria incorrecto semanticamente-- se crearon dos features derivados: \texttt{presupuesto\_log} = 0 cuando el presupuesto es nulo, y \texttt{tiene\_presupuesto} = 0 como indicador binario. Lo mismo aplica para \texttt{duracion\_total}: para series se calcula como \texttt{num\_episodes} $\times$ 45 min, evitando el nulo de \texttt{duration\_minutes}.
+
+\item \textbf{Nulos en categoricas}: Las columnas \texttt{platform}, \texttt{primary\_genre} y \texttt{rating} con valores faltantes se rellenaron con la etiqueta \texttt{`Desconocido'} antes de aplicar \texttt{LabelEncoder}, evitando errores de codificacion.
+
+\item \textbf{Nulos residuales en numericas}: Despues del feature engineering, las filas que aun contienen nulos en el set de features seleccionado se eliminan con \texttt{dropna()} antes del split. Dado que los nulos estructurales ya fueron absorbidos en el paso anterior, la perdida de filas en este paso es minima.
+\end{enumerate}
 
 \subsection{Codificacion de categoricas}
 
@@ -242,7 +262,7 @@ El SVM tiene resultados muy similares al Arbol de Decision. Su ROC-AUC es superi
 
 La red neuronal resuelve un problema diferente: clasificacion multiclase del rating de IMDb en tres categorias. Se implemento con TensorFlow/Keras incluyendo \texttt{rotten\_tomatoes\_score} (puntuacion de criticos) como feature; \texttt{imdb\_rating} sigue excluido para evitar leakage directo.
 
-Arquitectura: \texttt{Dense(128) -> Dropout(0.3) -> Dense(64) -> Dropout(0.2) -> Dense(3, softmax)}. Se usaron class weights balanceados para corregir el sesgo hacia la clase Medio (50\% del dataset), con \texttt{EarlyStopping(patience=20)} y \texttt{ReduceLROnPlateau}. El modelo convergio en 43 epocas.
+Arquitectura: \texttt{Dense(128) -> Dropout(0.3) -> Dense(64) -> Dropout(0.2) -> Dense(3, softmax)}. Se usaron class weights balanceados para corregir el sesgo hacia la clase Medio (50\% del dataset).
 
 \subsubsection{Resultados}
 
