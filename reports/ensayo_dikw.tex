@@ -59,11 +59,11 @@
 
 \subsection*{Introducci\'on}
 
-Las plataformas de streaming manejan miles de t\'itulos y necesitan entender cu\'ales generan mayor audiencia. Sin embargo, tener muchos datos no garantiza buenas decisiones. Para que los datos realmente sirvan, tienen que pasar por un proceso de transformaci\'on que los convierte primero en informaci\'on, luego en conocimiento y finalmente en sabidur\'ia. Este proceso se conoce como la jerarqu\'ia DIKW (por sus siglas en ingl\'es: Data, Information, Knowledge, Wisdom). El sistema desarrollado en este proyecto aplica esa jerarqu\'ia al cat\'alogo de contenido de diez plataformas de streaming, con el objetivo de predecir cu\'ales t\'itulos tendr\'an \'exito comercial.
+Las plataformas de streaming manejan miles de t\'itulos y necesitan entender cu\'ales generan mayor audiencia. Sin embargo, tener muchos datos no garantiza buenas decisiones. Para que los datos realmente sirvan, tienen que pasar por un proceso de transformaci\'on que los convierte primero en informaci\'on, luego en conocimiento y finalmente en sabidur\'ia. Este proceso se conoce como DIKW. El sistema desarrollado en este proyecto aplica esa jerarqu\'ia al cat\'alogo de contenido de diez plataformas de streaming, con el objetivo de predecir cu\'ales t\'itulos tendr\'an \'exito comercial.
 
 \subsection*{Dato}
 
-En la base de la jerarqu\'ia est\'an los datos crudos. En este caso, cada t\'itulo registrado en el sistema tiene asociado un conjunto de hechos: el nombre, la plataforma en que est\'a disponible, el g\'enero principal, el a\~no de lanzamiento, la clasificaci\'on de contenido, el presupuesto estimado, los votos del p\'ublico en sitios de rese\~nas y la cantidad de horas que fue visto. Por s\'i solos, estos n\'umeros y textos no dicen nada. Saber que un t\'itulo tiene una calificaci\'on de 7.2 o que fue lanzado en 2018 no permite tomar ninguna decisi\'on concreta. Son simplemente registros aislados que necesitan contexto para tener valor.
+En la base de DIKW est\'an los datos crudos. En este caso, cada t\'itulo registrado en el sistema tiene asociado un conjunto de hechos: el nombre, la plataforma en que est\'a disponible, el g\'enero principal, el a\~no de lanzamiento, la clasificaci\'on de contenido, el presupuesto estimado, los votos del p\'ublico en sitios de rese\~nas y la cantidad de horas que fue visto. Por s\'i solos, estos n\'umeros y textos no dicen nada. Saber que un t\'itulo tiene una calificaci\'on de 7.2 o que fue lanzado en 2018 no permite tomar ninguna decisi\'on concreta. Son simplemente registros que necesitan contexto para tener valor.
 
 \subsection*{Informaci\'on}
 
@@ -71,11 +71,11 @@ Cuando los datos se limpian, se combinan y se organizan, se convierten en inform
 
 \subsection*{Conocimiento}
 
-La informaci\'on, cuando se analiza en conjunto, permite descubrir patrones. Ah\'i es donde entra el conocimiento. A trav\'es de modelos de clasificaci\'on y agrupaci\'on, el sistema identifica qu\'e combinaciones de caracter\'isticas tienden a producir t\'itulos con alta audiencia. Por ejemplo, se puede observar que ciertos g\'eneros en determinadas plataformas concentran m\'as horas vistas, o que los t\'itulos con mayor n\'umero de premios no siempre coinciden con los m\'as vistos. Estos patrones no son obvios mirando los datos uno por uno; emergen del an\'alisis del conjunto completo. El conocimiento generado permite entender la l\'ogica detr\'as del \'exito de un t\'itulo, no solo describirlo.
+La informaci\'on, cuando se analiza en conjunto, permite descubrir patrones. Ah\'i es donde entra el conocimiento. A trav\'es de modelos de clasificaci\'on y agrupaci\'on, el sistema identifica qu\'e combinaciones de caracter\'isticas tienden a producir t\'itulos con alta audiencia. Por ejemplo, se puede observar que ciertos g\'eneros en determinadas plataformas concentran m\'as horas vistas, o que los t\'itulos con mayor n\'umero de premios no siempre coinciden con los m\'as vistos. Estos patrones no son obvios mirando los datos uno por uno; emergen del an\'alisis. El conocimiento generado permite entender la l\'ogica detr\'as del \'exito de un t\'itulo.
 
 \subsection*{Sabidur\'ia}
 
-El nivel m\'as alto de la jerarqu\'ia ocurre cuando el conocimiento se usa para tomar decisiones. En este sistema, esa etapa se materializa en una herramienta interactiva donde es posible ingresar las caracter\'isticas de un t\'itulo que a\'un no existe y obtener una estimaci\'on de si tendr\'a \'exito o no. Un productor de contenido o un ejecutivo de una plataforma puede usar esa herramienta para comparar opciones antes de invertir en una producci\'on. Ya no se trata de describir lo que pas\'o, sino de orientar lo que va a pasar. Eso es sabidur\'ia aplicada: usar lo aprendido para resolver el problema que dio origen al proyecto.
+El nivel m\'as alto de DIKW ocurre cuando el conocimiento se usa para tomar decisiones. En este sistema, esa etapa se hace en una herramienta interactiva donde es posible ingresar las caracter\'isticas de un t\'itulo que a\'un no existe y obtener una estimaci\'on de si tendr\'a \'exito o no. Un productor de contenido o un ejecutivo de una plataforma puede usar esa herramienta para comparar opciones antes de invertir en una producci\'on. 
 
 \subsection*{Conclusi\'on}
 
@@ -89,11 +89,11 @@ El recorrido desde el dato crudo hasta la sabidur\'ia no es autom\'atico. Requie
 
 \subsection*{Descripci\'on del caso de estudio}
 
-Las plataformas de streaming compiten por la atenci\'on del p\'ublico con cat\'alogos cada vez m\'as grandes. Decidir qu\'e contenido producir o adquirir implica inversiones significativas, y no todos los t\'itulos logran el nivel de audiencia esperado. El problema central es que las decisiones editoriales suelen basarse en criterios subjetivos o en la experiencia de quienes las toman, sin un respaldo sistem\'atico en datos hist\'oricos.
+Las plataformas de streaming compiten por la atenci\'on del p\'ublico con cat\'alogos cada vez m\'as grandes. Decidir qu\'e contenido producir o adquirir implica inversiones significativas, y no todos los t\'itulos logran el nivel de audiencia esperado. El problema central es que las decisiones editoriales suelen basarse en criterios subjetivos o en la experiencia de quienes las toman, sin un respaldo en datos hist\'oricos.
 
-Este proyecto aborda ese problema construyendo un sistema que analiza el cat\'alogo de diez plataformas de streaming, con m\'as de 15{,}000 t\'itulos registrados entre 1980 y 2026. El sistema utiliza caracter\'isticas objetivas de cada t\'itulo, como el g\'enero, el a\~no de producci\'on, el presupuesto, las calificaciones del p\'ublico y la cr\'itica, y la cantidad de horas vistas, para identificar qu\'e factores est\'an asociados al \'exito comercial.
+Este proyecto aborda ese problema construyendo un sistema que analiza el cat\'alogo de diez plataformas de streaming, con m\'as de 15{,}000 t\'itulos registrados entre 1980 y 2026. El sistema utiliza caracter\'isticas de cada t\'itulo, como el g\'enero, el a\~no de producci\'on, el presupuesto, las calificaciones del p\'ublico y la cr\'itica, y la cantidad de horas vistas, para identificar qu\'e factores van de la mano con el \'exito comercial.
 
-El objetivo es doble. Por un lado, describir el panorama actual del contenido en streaming mediante an\'alisis exploratorio y visualizaciones. Por otro, ofrecer una herramienta predictiva que permita estimar la probabilidad de \'exito de un t\'itulo antes de que sea lanzado, apoy\'andose en modelos de clasificaci\'on y agrupaci\'on entrenados con los datos hist\'oricos disponibles.
+El objetivo es, por un lado, describir el panorama actual del contenido en streaming mediante an\'alisis exploratorio y visualizaciones. Por otro, ofrecer una herramienta predictiva que permita estimar la probabilidad de \'exito de un t\'itulo antes de que sea lanzado, apoy\'andose en modelos de clasificaci\'on y agrupaci\'on entrenados con los datos hist\'oricos disponibles.
 
 % ---------------------------------------------------------------
 % MINIESPECIFICACION DE REQUERIMIENTOS
@@ -196,9 +196,9 @@ El sistema corre de forma local. No existe un nivel de servicio formal. Est\'a d
 
 \subsection*{Justificaci\'on de la normalizaci\'on}
 
-El archivo de datos original almacena toda la informaci\'on en una sola tabla plana. Esto genera dos tipos de problemas. El primero es que los campos \textit{genres} y \textit{cast} contienen listas de valores separados por comas dentro de una sola celda, lo que viola la Primera Forma Normal (1FN), que exige que cada campo contenga un \'unico valor. El segundo es que datos como el nombre de la plataforma o la empresa productora se repiten en cada registro, generando redundancias que violan la Tercera Forma Normal (3FN).
+El archivo de datos original almacena toda la informaci\'on en una sola tabla. Esto genera dos tipos de problemas. El primero es que los campos \textit{genres} y \textit{cast} contienen listas de valores separados por comas dentro de una sola celda, lo que viola la Primera Forma Normal (1FN), que exige que cada campo contenga un \'unico valor. El segundo es que datos como el nombre de la plataforma o la empresa productora se repiten en cada registro, generando redundancias que violan la Tercera Forma Normal (3FN).
 
-El esquema propuesto resuelve estos problemas separando las entidades en tablas independientes, creando tablas intermedias para las relaciones de muchos a muchos y trasladando los valores repetidos a tablas de referencia.
+El esquema propuesto resuelve estos problemas separando las entidades en tablas independientes, creando tablas para las relaciones de muchos a muchos y trasladando los valores repetidos a tablas de referencia.
 
 \newpage
 \subsection*{Diagrama Entidad-Relaci\'on}
@@ -513,8 +513,7 @@ hours\_watched     & DECIMAL(10,2) & NULL          & Horas vistas acumuladas en 
 
 \subsection*{L\'ogica de Transformaci\'on}
 
-La conversi\'on de los datos crudos en informaci\'on \'util para los modelos se realiza en dos etapas secuenciales: limpieza y construcci\'on de variables. Cada regla est\'a motivada por una necesidad concreta del sistema.
-
+La transfromacion de los datos crudos en informaci\'on \'util para los modelos se realiza en dos etapas: limpieza y construcci\'on de variables. 
 \vspace{0.4cm}
 
 \textbf{Etapa 1: Limpieza de datos}
@@ -630,9 +629,9 @@ Los umbrales corresponden al percentil 25 y 75 del conjunto, generando tres clas
 \newpage
 \subsection*{Especificaci\'on de Orquestaci\'on}
 
-El sistema se ejecuta como una secuencia de pasos con dependencias expl\'icitas. 
+El sistema se ejecuta como una secuencia de pasos.
 
-El pipeline se organiza en tres niveles de ejecuci\'on con dependencias expl\'icitas entre pasos.
+El pipeline se organiza en tres niveles de ejecuci\'on.
 
 El primer nivel parte del archivo de datos crudo y puede ejecutarse en paralelo: el notebook \textbf{01\_eda} realiza el an\'alisis exploratorio leyendo directamente el CSV, mientras que el notebook \textbf{02\_preprocesamiento} aplica todas las transformaciones y guarda los archivos procesados en disco.
 
@@ -646,7 +645,7 @@ El tercer nivel requiere que todos los modelos est\'en entrenados. El notebook \
 \newpage
 \section*{Propuesta de Valor}
 
-La sabidur\'ia anticipada en la secci\'on inicial de este ensayo se concreta aqu\'i en decisiones espec\'ificas que el sistema construido hace posibles. El pipeline transforma datos crudos del cat\'alogo de streaming en modelos capaces de responder preguntas concretas de negocio con evidencia cuantitativa.
+El pipeline transforma datos crudos del cat\'alogo de streaming en modelos capaces de responder preguntas concretas de negocio con evidencia cuantitativa.
 
 \subsection*{Decisiones habilitadas por el sistema}
 
@@ -697,54 +696,8 @@ Red Neuronal (TF) & imdb\_clase & 0.676 & 0.684 & multiclase \\
 
 El prototipo de visualizaci\'on es un dashboard desarrollado en Streamlit que integra todos los resultados del proyecto en una interfaz web interactiva. El dashboard est\'a compuesto por siete secciones, cada una orientada a responder preguntas espec\'ificas de negocio a partir de los datos y modelos entrenados.
 
-\subsection*{Descripci\'on del dashboard}
 
-La navegaci\'on se organiza mediante un men\'u lateral con las siguientes p\'aginas:
 
-\vspace{0.3cm}
-\begin{center}
-\begin{tabular}{p{4cm} p{10cm}}
-\toprule
-P\'agina & Descripci\'on \\
-\midrule
-\addlinespace[0.15cm]
-Resumen del Dataset &
-Estad\'isticas generales del cat\'alogo: distribuci\'on de t\'itulos por plataforma, g\'eneros m\'as frecuentes y cobertura temporal. \\
-\addlinespace[0.3cm]
-Preprocesamiento &
-Muestra el resultado del pipeline de transformaci\'on: columnas derivadas, distribuci\'on de valores nulos y estad\'isticas del conjunto procesado. \\
-\addlinespace[0.3cm]
-Exploraci\'on (EDA) &
-Visualizaciones de distribuciones, correlaciones entre variables y comparaciones por categor\'ias clave como tipo de contenido y g\'enero. \\
-\addlinespace[0.3cm]
-Comparaci\'on de Plataformas &
-Tabla comparativa y gr\'afico de radar para evaluar dos plataformas en cuatro dimensiones: IMDb, Rotten Tomatoes, porcentaje de hits y premios ganados. \\
-\addlinespace[0.3cm]
-Predictor de \'Exito &
-Formulario interactivo donde el usuario ingresa las caracter\'isticas de un t\'itulo y obtiene la predicci\'on de is\_hit con dos modelos (\'Arbol de Decisi\'on y SVM) m\'as la asignaci\'on de cluster K-Means. \\
-\addlinespace[0.3cm]
-Calidad Percibida &
-Formulario similar orientado a predecir la categor\'ia IMDb (Bajo, Medio o Alto) usando la red neuronal. \\
-\addlinespace[0.3cm]
-Clusters de Contenido &
-Mapa interactivo de los cuatro clusters identificados por K-Means, con descripci\'on del perfil de cada grupo y sus caracter\'isticas promedio. \\
-\addlinespace[0.15cm]
-\bottomrule
-\end{tabular}
-\end{center}
 
-\subsection*{Pregunta de negocio principal}
-
-La p\'agina de mayor valor para la toma de decisiones es el \textbf{Predictor de \'Exito Comercial}. Un analista puede ingresar las caracter\'isticas de un t\'itulo antes de adquirirlo, como plataforma, g\'enero, tipo, a\~no de lanzamiento, presupuesto, tama\~no del elenco y premios, y obtener en tiempo real la probabilidad de \'exito seg\'un dos modelos independientes. Cuando ambos modelos coinciden, la confianza en la decisi\'on aumenta; cuando difieren, el sistema lo notifica expl\'icitamente para que el analista considere el contexto adicional.
-
-\subsection*{Visualizaci\'on de clusters}
-
-El an\'alisis de agrupamiento revela la estructura latente del cat\'alogo. La figura siguiente muestra los valores promedio de las variables m\'as relevantes por cluster, lo que permite caracterizar cada perfil y entender qu\'e tipo de contenido lo compone.
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.85\textwidth]{figures/19_heatmap_clusters.png}
-\caption{Mapa de calor de los cuatro clusters de contenido. Cada fila representa un grupo y cada columna una variable normalizada. Las diferencias entre perfiles son claras en t\'erminos de calificaci\'on, horas vistas y antig\"uedad del contenido.}
-\end{figure}
 
 \end{document}
